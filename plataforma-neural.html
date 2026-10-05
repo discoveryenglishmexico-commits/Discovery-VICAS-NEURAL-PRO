@@ -28,7 +28,6 @@ html.light{
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;transition:background .35s,color .35s}
 .mono{font-family:'JetBrains Mono',monospace}
-/* ======= FONDO NEURAL ======= */
 .bgglow{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0;animation:breath 9s ease-in-out infinite}
 .g1{top:-140px;left:-120px;width:420px;height:420px;background:rgba(139,92,246,.20)}
 .g2{top:40%;right:-140px;width:420px;height:420px;background:rgba(6,182,212,.14);animation-delay:-3s}
@@ -39,7 +38,6 @@ html.light .bgglow{opacity:.4}
   background-image:linear-gradient(rgba(148,163,184,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.05) 1px,transparent 1px);
   background-size:44px 44px;mask-image:radial-gradient(ellipse at 50% 40%,#000 30%,transparent 75%)}
 .wrap{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 20px}
-/* ======= HEADER ======= */
 header{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);background:var(--card);border-bottom:1px solid var(--line)}
 .h-in{max-width:1280px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .logo-badge{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--vio),var(--cy));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:1.25rem;box-shadow:0 0 18px rgba(139,92,246,.5)}
@@ -49,9 +47,8 @@ header{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);background:va
 .nbf-live{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.14em;color:var(--c-act);
   border:1px solid rgba(6,182,212,.45);background:rgba(6,182,212,.08);padding:7px 14px;border-radius:999px;animation:liveblink 2.2s infinite}
 @keyframes liveblink{0%,100%{box-shadow:0 0 6px rgba(6,182,212,.25);opacity:.85}50%{box-shadow:0 0 20px rgba(6,182,212,.65);opacity:1}}
-.iconbtn{width:40px;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--field);color:var(--muted);cursor:pointer;font-size:1.05rem;transition:.25s}
+.iconbtn{width:40px;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--field);color:var(--muted);cursor:pointer;font-size:1.05rem;transition:.25s;text-decoration:none;display:flex;align-items:center;justify-content:center}
 .iconbtn:hover{color:var(--txt);border-color:var(--c-act);box-shadow:0 0 14px rgba(34,211,238,.35);transform:translateY(-2px)}
-/* ======= HERO INTRO ======= */
 .hero{padding:64px 0 30px;text-align:center}
 .hero .kick{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--vio);
   border:1px solid rgba(139,92,246,.4);background:rgba(139,92,246,.09);padding:7px 16px;border-radius:999px;margin-bottom:18px}
@@ -62,11 +59,9 @@ header{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);background:va
 .stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
 .stat{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.12em;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--muted)}
 .stat b{color:var(--c-act);text-shadow:0 0 10px rgba(34,211,238,.5)}
-/* ======= LAYOUT SIMULADOR ======= */
 section{scroll-margin-top:96px}
 .sim-area{display:grid;grid-template-columns:minmax(300px,4fr) 8fr;gap:22px;padding:26px 0 10px}
 @media(max-width:980px){.sim-area{grid-template-columns:1fr}}
-/* ======= PANEL NEON PARPADEANTE ======= */
 .glass{background:var(--card);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:20px;position:relative;transition:background .35s,border-color .35s}
 .panel-neon{padding:24px;overflow:hidden;animation:panelblink 3.4s infinite}
 @keyframes panelblink{
@@ -104,7 +99,6 @@ input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;b
 .minicard h4{font-size:.82rem;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .minicard p{font-size:.72rem;color:var(--muted);line-height:1.6}
 .minicard p b{color:var(--txt)}
-/* ======= CONSOLA / PANTALLA ======= */
 .console{padding:0;overflow:hidden;display:flex;flex-direction:column;min-height:560px}
 .con-top{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--card2);flex-wrap:wrap}
 .tl{width:13px;height:13px;border-radius:50%;animation:tlive 1.8s infinite}
@@ -133,7 +127,6 @@ input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;b
 #activeTextLine{font-size:clamp(1.5rem,3.6vw,2.5rem);font-weight:700;letter-spacing:.01em;line-height:1.55;text-align:center;max-width:860px;transition:opacity .15s}
 #activeTextLine .idlemsg{font-size:clamp(.95rem,1.8vw,1.15rem);font-weight:500;color:var(--muted)}
 #activeTextLine .idlemsg b{color:var(--c-act)}
-/* palabras NBF */
 .nbfw{cursor:pointer;border-bottom:2px solid currentColor;border-radius:5px;padding:1px 4px;transition:.18s;position:relative}
 .nbfw:hover{transform:translateY(-2px);background:rgba(148,163,184,.12)}
 .w-act{color:var(--c-act);text-shadow:0 0 12px rgba(34,211,238,.45)}
@@ -158,7 +151,6 @@ input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;b
 .playbtn:active{transform:scale(.97)}
 .counter{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.14em;color:var(--muted)}
 .counter b{color:var(--c-act);text-shadow:0 0 8px rgba(34,211,238,.6)}
-/* ======= LEYENDA ======= */
 .legend{margin:22px 0 8px;padding:20px 22px}
 .legend h4{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;font-family:'JetBrains Mono',monospace}
 .lg-row{display:flex;flex-wrap:wrap;gap:9px}
@@ -167,14 +159,12 @@ input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;b
 .lg i{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
 .lg-note{margin-top:14px;font-size:.7rem;color:var(--muted);line-height:1.6}
 .lg-note b{color:var(--c-act)}
-/* ======= EFECTO VIVO 4D ======= */
 .alive{animation:alive4d .9s ease}
 @keyframes alive4d{
   0%{filter:none}
   22%{filter:brightness(1.35) saturate(1.6) hue-rotate(12deg);box-shadow:0 0 40px rgba(34,211,238,.55),inset 0 0 30px rgba(139,92,246,.3)}
   55%{filter:brightness(1.15) saturate(1.3) hue-rotate(-10deg);box-shadow:0 0 22px rgba(139,92,246,.45),inset 0 0 16px rgba(34,211,238,.2)}
   100%{filter:none}}
-/* ======= TOAST / FOOTER ======= */
 #toast{position:fixed;bottom:24px;right:24px;z-index:90;background:var(--card2);border:1px solid rgba(6,182,212,.45);color:var(--txt);
   border-radius:14px;padding:13px 20px;font-size:.76rem;font-family:'JetBrains Mono',monospace;box-shadow:0 0 26px rgba(6,182,212,.35);
   opacity:0;transform:translateY(16px);transition:.4s;pointer-events:none;max-width:320px}
@@ -192,6 +182,7 @@ footer b{color:var(--c-act)}
     <div class="logo-badge">D</div>
     <div class="logo-t"><b>Discovery <span>MAX</span></b><small>Neuroeducation Networks</small></div>
     <span class="nbf-live">MÉTODO NBF ACTIVE ONLINE</span>
+    <a class="iconbtn" href="index.html" title="Volver a la Plataforma">🏠</a>
     <button class="iconbtn" id="audioBtn" title="Sonidos gravitacionales">🔊</button>
     <button class="iconbtn" id="themeBtn" title="Fondo oscuro / claro">🌙</button>
   </div>
@@ -199,7 +190,6 @@ footer b{color:var(--c-act)}
 
 <div class="wrap">
 
-  <!-- ============ INTRO ============ -->
   <section class="hero">
     <span class="kick">La Revolución Cognitiva Adulta</span>
     <h1>Los verbos en inglés <em>no existen</em>.</h1>
@@ -212,10 +202,9 @@ footer b{color:var(--c-act)}
     </div>
   </section>
 
-  <!-- ============ SIMULADOR (ANCLA #cabina) ============ -->
+  <!-- ══════════ SECCIÓN CON ANCLA: id="cabina" ══════════ -->
   <section class="sim-area" id="cabina">
 
-    <!-- PANEL DE CONTROL NEÓN -->
     <div class="glass panel-neon">
       <div class="p-head">
         <span class="ico">⚙️</span>
@@ -259,7 +248,6 @@ footer b{color:var(--c-act)}
       </div>
     </div>
 
-    <!-- CONSOLA PANTALLA -->
     <div class="glass console">
       <div class="con-top">
         <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
@@ -290,7 +278,6 @@ footer b{color:var(--c-act)}
     </div>
   </section>
 
-  <!-- ============ LEYENDA ======= -->
   <div class="glass legend">
     <h4>// Mapa de color · Sistema Operativo NBF</h4>
     <div class="lg-row">
@@ -340,7 +327,7 @@ function sweepSfx(up){ if(!audioOn)return; const c=ac(); if(!c)return; const t=c
   o.connect(g);g.connect(c.destination); o.start(t); o.stop(t+.5);
 }
 document.getElementById('audioBtn').addEventListener('click',function(){
-  audioOn=!audioOn; this.textContent=audioOn?'🔊':'🔇';
+  audioOn=!audioOn; this.textContent=audioOn?'🔊':'';
   if(audioOn)gravSfx(); showToast(audioOn?'Sonidos gravitacionales activados':'Audio silenciado');
 });
 /* ================= TEMA ================= */
@@ -369,7 +356,7 @@ function showToast(m){const t=document.getElementById('toast');t.textContent=m;t
   cx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--c-act').trim()||'#22d3ee';
   cx.lineWidth=1.4;cx.shadowBlur=6;cx.shadowColor=cx.strokeStyle;cx.stroke();cx.shadowBlur=0;
   ph+=2;requestAnimationFrame(draw);})();})();
-/* ================= LÉXICO NBF (COLORES CORREGIDOS) ================= */
+/* ================= LÉXICO NBF ================= */
 const L={
  act:['i','you','he','she','it','we','they',"i'm","you're","he's","she's","it's","we're","they're"],
  obj:['me','him','her','us','them','whom'],
@@ -382,7 +369,7 @@ const L={
  adv:['sure','first','finally','so','even','more','although','too','very','not','just','then','there','always','never','already','quite','here','why','otherwise','else','late','well','how','soon','where','enough','straight','abroad'],
  sus:['williams','trip','countries','country','europe','internet','agency','options','spain','france','italy','dutchland','objective','april','year','vacation','week','spring','packages','package','flight','train','places','place','choice','family','runway','voyage','daybreak','reception','luggage','airline','scale','relief','james','amount','mom','weight','desk','agent','passports','passport','itinerary','visas','visa','insurance','declaration','presence','cards','card','tabs','tab','schedule','terminal','gate','announcement','wait','exit','stopover','ticket','airport','customs','hours','hour','day','days','month','months','people','person','water','book','books','watch','watches','need','house','home','city','street','streets','memories','memory','object','room','living','spring']
 };
-const NOUN_ES={can:'lata',book:'libro / reserva',watch:'reloj',water:'agua',trip:'viaje',countries:'países',country:'país',flight:'vuelo',train:'tren',agency:'agencia',family:'familia',luggage:'equipaje',passport:'pasaporte',passports:'pasaportes',ticket:'boleto',airport:'aeropuerto',gate:'puerta',schedule:'horario',vacation:'vacaciones',spring:'primavera',year:'año',week:'semana',day:'día',hour:'hora',people:'personas',house:'casa',home:'hogar',city:'ciudad',street:'calle',need:'necesidad',scale:'balanza',weight:'peso',agent:'agente',desk:'mostrador',insurance:'seguro',presence:'presencia',declaration:'declaración',cards:'tarjetas',tabs:'etiquetas',terminal:'terminal',announcement:'anuncio',exit:'salida',stopover:'escala',voyage:'travesía',runway:'pista',daybreak:'amanecer',reception:'recepción',airline:'aerolínea',amount:'cantidad',mom:'mamá',relief:'alivio',williams:'Williams (nombre)',europe:'Europa',spain:'España',france:'Francia',italy:'Italia',internet:'internet',options:'opciones',objective:'objetivo',april:'abril',packages:'paquetes',places:'lugares',choice:'elección',memories:'recuerdos',object:'objeto',room:'sala',wait:'espera',customs:'aduana',itinerary:'itinerario',visas:'visas',weight:'peso'};
+const NOUN_ES={can:'lata',book:'libro / reserva',watch:'reloj',water:'agua',trip:'viaje',countries:'países',country:'país',flight:'vuelo',train:'tren',agency:'agencia',family:'familia',luggage:'equipaje',passport:'pasaporte',passports:'pasaportes',ticket:'boleto',airport:'aeropuerto',gate:'puerta',schedule:'horario',vacation:'vacaciones',spring:'primavera',year:'año',week:'semana',day:'día',hour:'hora',people:'personas',house:'casa',home:'hogar',city:'ciudad',street:'calle',need:'necesidad',scale:'balanza',weight:'peso',agent:'agente',desk:'mostrador',insurance:'seguro',presence:'presencia',declaration:'declaración',cards:'tarjetas',tabs:'etiquetas',terminal:'terminal',announcement:'anuncio',exit:'salida',stopover:'escala',voyage:'travesía',runway:'pista',daybreak:'amanecer',reception:'recepción',airline:'aerolínea',amount:'cantidad',mom:'mamá',relief:'alivio',williams:'Williams (nombre)',europe:'Europa',spain:'España',france:'Francia',italy:'Italia',internet:'internet',options:'opciones',objective:'objetivo',april:'abril',packages:'paquetes',places:'lugares',choice:'elección',memories:'recuerdos',object:'objeto',room:'sala',wait:'espera',customs:'aduana',itinerary:'itinerario',visas:'visas'};
 const META={
  act:{n:'PPD ACTIVADOR',c:'Columna 1',d:'Pronombre personal directo en función de sujeto: el botón de PLAY que enciende la palabra base.'},
  obj:{n:'PRONOMBRE OBJETO',c:'Receptor',d:'Recibe la acción. NO activa sustantivos: no es activador.'},
@@ -508,11 +495,10 @@ function stop(){
 }
 /* INIT */
 reload();
-/* Si la página abre con #cabina, asegura el scroll hasta el simulador */
+/* Si la página abre con #cabina, baja directo al simulador */
 window.addEventListener('load',()=>{
   if(location.hash==='#cabina'){const s=document.getElementById('cabina');if(s)s.scrollIntoView({behavior:'smooth'});}
 });
 </script>
 </body>
 </html>
-<a class="portal" style="--pc:var(--cy);--pc2:var(--vio)" id="gate1" href="https://discoveryenglishmexico-commits.github.io/Discovery-VICAS-NEURAL-PRO/index.html#cabina">
