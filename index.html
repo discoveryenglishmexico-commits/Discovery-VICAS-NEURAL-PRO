@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discovery MAX NBF — Cabina Neural · Simulador Cognitivo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5/index.css">
+<style>
+:root{
+  --bg:#05070c; --bg2:#0a0f1c;
+  --card:rgba(12,17,32,.74); --card2:rgba(8,12,24,.85); --field:#0b1020;
+  --line:rgba(148,163,184,.16); --txt:#e2e8f0; --muted:#94a3b8; --muted2:#64748b;
+  --screen:rgba(3,6,14,.55);
+  --c-act:#22d3ee; --c-obj:#60a5fa; --c-pos:#2dd4bf; --c-sus:#a78bfa; --c-pre:#4ade80;
+  --c-adj:#f472b6; --c-adv:#fbbf24; --c-aux:#818cf8; --c-mod:#fb923c; --c-art:#94a3b8;
+  --vio:#8b5cf6; --cy:#06b6d4;
+}
+html.light{
+  --bg:#eef2f7; --bg2:#e2e8f0;
+  --card:rgba(255,255,255,.86); --card2:rgba(248,250,252,.9); --field:#ffffff;
+  --line:rgba(15,23,42,.14); --txt:#0f172a; --muted:#475569; --muted2:#64748b;
+  --screen:rgba(255,255,255,.75);
+  --c-act:#0e7490; --c-obj:#1d4ed8; --c-pos:#0f766e; --c-sus:#6d28d9; --c-pre:#15803d;
+  --c-adj:#be185d; --c-adv:#b45309; --c-aux:#4338ca; --c-mod:#c2410c; --c-art:#475569;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;transition:background .35s,color .35s}
+.mono{font-family:'JetBrains Mono',monospace}
+/* ======= FONDO NEURAL ======= */
+.bgglow{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0;animation:breath 9s ease-in-out infinite}
+.g1{top:-140px;left:-120px;width:420px;height:420px;background:rgba(139,92,246,.20)}
+.g2{top:40%;right:-140px;width:420px;height:420px;background:rgba(6,182,212,.14);animation-delay:-3s}
+.g3{bottom:-160px;left:30%;width:460px;height:460px;background:rgba(16,185,129,.12);animation-delay:-6s}
+html.light .bgglow{opacity:.4}
+@keyframes breath{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:.95;transform:scale(1.06)}}
+.gridfloor{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(148,163,184,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.05) 1px,transparent 1px);
+  background-size:44px 44px;mask-image:radial-gradient(ellipse at 50% 40%,#000 30%,transparent 75%)}
+.wrap{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 20px}
+/* ======= HEADER ======= */
+header{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);background:var(--card);border-bottom:1px solid var(--line)}
+.h-in{max-width:1280px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo-badge{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--vio),var(--cy));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:1.25rem;box-shadow:0 0 18px rgba(139,92,246,.5)}
+.logo-t b{font-size:1.02rem;letter-spacing:.02em}
+.logo-t b span{color:var(--c-act)}
+.logo-t small{display:block;font-size:.6rem;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+.nbf-live{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.14em;color:var(--c-act);
+  border:1px solid rgba(6,182,212,.45);background:rgba(6,182,212,.08);padding:7px 14px;border-radius:999px;animation:liveblink 2.2s infinite}
+@keyframes liveblink{0%,100%{box-shadow:0 0 6px rgba(6,182,212,.25);opacity:.85}50%{box-shadow:0 0 20px rgba(6,182,212,.65);opacity:1}}
+.iconbtn{width:40px;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--field);color:var(--muted);cursor:pointer;font-size:1.05rem;transition:.25s}
+.iconbtn:hover{color:var(--txt);border-color:var(--c-act);box-shadow:0 0 14px rgba(6,182,212,.35);transform:translateY(-2px)}
+/* ======= HERO INTRO ======= */
+.hero{padding:64px 0 30px;text-align:center}
+.hero .kick{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--vio);
+  border:1px solid rgba(139,92,246,.4);background:rgba(139,92,246,.09);padding:7px 16px;border-radius:999px;margin-bottom:18px}
+.hero h1{font-size:clamp(2rem,5.4vw,3.5rem);font-weight:800;letter-spacing:-.02em;line-height:1.12}
+.hero h1 em{font-style:normal;color:var(--c-adj);text-decoration:underline;text-decoration-color:var(--c-adj);text-underline-offset:6px}
+.hero p{max-width:820px;margin:16px auto 0;color:var(--muted);font-size:clamp(.95rem,1.6vw,1.1rem)}
+.hero p b{color:var(--txt)}
+.stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.stat{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.12em;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--muted)}
+.stat b{color:var(--c-act);text-shadow:0 0 10px rgba(34,211,238,.5)}
+/* ======= LAYOUT SIMULADOR ======= */
+.sim-area{display:grid;grid-template-columns:minmax(300px,4fr) 8fr;gap:22px;padding:26px 0 10px}
+@media(max-width:980px){.sim-area{grid-template-columns:1fr}}
+/* ======= PANEL NEON PARPADEANTE ======= */
+.glass{background:var(--card);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:20px;position:relative;transition:background .35s,border-color .35s}
+.panel-neon{padding:24px;overflow:hidden;animation:panelblink 3.4s infinite}
+@keyframes panelblink{
+  0%,100%{box-shadow:0 0 14px rgba(6,182,212,.12),inset 0 0 18px rgba(139,92,246,.05);border-color:rgba(6,182,212,.35)}
+  50%{box-shadow:0 0 34px rgba(139,92,246,.35),inset 0 0 26px rgba(6,182,212,.10);border-color:rgba(139,92,246,.55)}}
+.panel-neon::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--cy),var(--vio),var(--c-pre),transparent);opacity:.8}
+.leds{display:flex;gap:8px}
+.led{width:7px;height:7px;border-radius:50%;background:#1a2040;animation:ledblink 2s infinite}
+.led.c{--lc:var(--cy)} .led.v{--lc:var(--vio)} .led.g{--lc:#2bffa7} .led.a{--lc:#ffc94d}
+@keyframes ledblink{0%,100%{background:#232a44;box-shadow:none}14%{background:var(--lc);box-shadow:0 0 9px var(--lc),0 0 18px var(--lc)}32%{background:#232a44;box-shadow:none}}
+.p-head{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.p-head .ico{width:40px;height:40px;border-radius:11px;background:rgba(139,92,246,.14);display:flex;align-items:center;justify-content:center;font-size:1.15rem}
+.p-head h3{font-size:1.05rem;font-weight:800}
+.p-head .leds{margin-left:auto}
+label.lb{display:block;font-size:.64rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+select,textarea{width:100%;background:var(--field);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:12px 14px;font-size:.88rem;font-family:'Inter',sans-serif;outline:none;transition:.25s}
+select:focus,textarea:focus{border-color:var(--vio);box-shadow:0 0 14px rgba(139,92,246,.35)}
+textarea{font-family:'JetBrains Mono',monospace;font-size:.8rem;resize:vertical;min-height:96px}
+.hidden{display:none}
+.btn{cursor:pointer;border-radius:11px;border:1px solid var(--line);background:var(--field);color:var(--txt);font-weight:700;font-size:.78rem;padding:10px 16px;transition:.25s;font-family:'Inter',sans-serif}
+.btn:hover{border-color:var(--c-act);box-shadow:0 0 14px rgba(34,211,238,.35);transform:translateY(-2px)}
+.btn.load{width:100%;margin-top:8px;background:rgba(139,92,246,.14);border-color:rgba(139,92,246,.45);color:var(--c-sus)}
+.btn.load:hover{box-shadow:0 0 18px rgba(139,92,246,.5)}
+.speedrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.speedval{font-family:'JetBrains Mono',monospace;font-size:.78rem;font-weight:700;color:var(--vio);text-shadow:0 0 10px rgba(139,92,246,.6)}
+input[type=range]{width:100%;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--cy),var(--vio));appearance:none;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;border-radius:50%;background:var(--vio);border:2px solid #fff;box-shadow:0 0 14px rgba(139,92,246,.8);cursor:pointer}
+.rangelab{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--muted2);margin-top:6px}
+.chunkgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.chunkbtn{cursor:pointer;border-radius:11px;border:1px solid var(--line);background:var(--field);color:var(--muted);font-size:.72rem;font-weight:700;padding:11px 6px;transition:.25s;font-family:'Inter',sans-serif}
+.chunkbtn:hover{color:var(--txt);border-color:var(--vio);box-shadow:0 0 12px rgba(139,92,246,.35)}
+.chunkbtn.on{background:var(--vio);border-color:var(--vio);color:#fff;box-shadow:0 0 20px rgba(139,92,246,.6);text-shadow:0 0 8px rgba(255,255,255,.6)}
+.minicard{margin-top:18px;padding:16px;border-radius:14px;border:1px solid var(--line);background:var(--card2)}
+.minicard h4{font-size:.82rem;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.minicard p{font-size:.72rem;color:var(--muted);line-height:1.6}
+.minicard p b{color:var(--txt)}
+/* ======= CONSOLA / PANTALLA ======= */
+.console{padding:0;overflow:hidden;display:flex;flex-direction:column;min-height:560px}
+.con-top{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--card2);flex-wrap:wrap}
+.tl{width:13px;height:13px;border-radius:50%;animation:tlive 1.8s infinite}
+.tl.r{background:#ff3b3b;box-shadow:0 0 10px #ff3b3b,0 0 24px rgba(255,59,59,.65)}
+.tl.y{background:#ffc94d;box-shadow:0 0 10px #ffc94d,0 0 24px rgba(255,201,77,.6);animation-delay:.35s}
+.tl.g{background:#2bffa7;box-shadow:0 0 10px #2bffa7,0 0 24px rgba(43,255,167,.6);animation-delay:.7s}
+@keyframes tlive{0%,100%{filter:brightness(1)}50%{filter:brightness(1.65)}}
+.con-status{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.12em;color:var(--muted);margin-left:auto}
+.con-status b{color:var(--c-pre)}
+#eeg{width:150px;height:30px;opacity:.9}
+.screen{position:relative;flex:1;background:var(--screen);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 34px;overflow:hidden}
+.screen::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(148,163,184,.045) 0 1px,transparent 1px 4px)}
+.screen::after{content:'';position:absolute;left:0;right:0;height:90px;top:-90px;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(34,211,238,.07),transparent);animation:scan 5.5s linear infinite}
+@keyframes scan{to{top:110%}}
+.guide{position:absolute;top:0;bottom:0;border-left:1px dashed var(--line);pointer-events:none}
+.guide.l{left:22%}.guide.r{right:22%}
+.guide span{position:absolute;top:10px;left:4px;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.16em;color:var(--muted2)}
+.hud{position:absolute;width:26px;height:26px;border:2px solid rgba(34,211,238,.5);pointer-events:none;filter:drop-shadow(0 0 6px rgba(34,211,238,.5))}
+.hud.tl2{top:12px;left:12px;border-right:none;border-bottom:none}
+.hud.tr{top:12px;right:12px;border-left:none;border-bottom:none}
+.hud.bl{bottom:12px;left:12px;border-right:none;border-top:none}
+.hud.br{bottom:12px;right:12px;border-left:none;border-top:none}
+.memtag{position:absolute;top:16px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.3em;text-transform:uppercase;color:var(--c-act);text-shadow:0 0 10px rgba(34,211,238,.6)}
+#activeTextLine{font-size:clamp(1.5rem,3.6vw,2.5rem);font-weight:700;letter-spacing:.01em;line-height:1.55;text-align:center;max-width:860px;transition:opacity .15s}
+#activeTextLine .idlemsg{font-size:clamp(.95rem,1.8vw,1.15rem);font-weight:500;color:var(--muted)}
+#activeTextLine .idlemsg b{color:var(--c-act)}
+/* palabras NBF */
+.nbfw{cursor:pointer;border-bottom:2px solid currentColor;border-radius:5px;padding:1px 4px;transition:.18s;position:relative}
+.nbfw:hover{transform:translateY(-2px);background:rgba(148,163,184,.12)}
+.w-act{color:var(--c-act);text-shadow:0 0 12px rgba(34,211,238,.45)}
+.w-obj{color:var(--c-obj)} .w-pos{color:var(--c-pos)} .w-sus{color:var(--c-sus);text-shadow:0 0 12px rgba(167,139,250,.4)}
+.w-pre{color:var(--c-pre)} .w-adj{color:var(--c-adj)} .w-adv{color:var(--c-adv)}
+.w-aux{color:var(--c-aux)} .w-mod{color:var(--c-mod);text-shadow:0 0 12px rgba(251,146,60,.4)} .w-art{color:var(--c-art)}
+#definer{margin-top:26px;min-height:52px;opacity:0;transition:opacity .35s;text-align:center;max-width:760px}
+#definer.show{opacity:1}
+#defText{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.7;color:var(--c-act);
+  border:1px solid rgba(6,182,212,.4);background:var(--card2);border-radius:12px;padding:10px 16px;box-shadow:0 0 18px rgba(6,182,212,.2)}
+#defText b{color:var(--txt)} #defText .nn{color:var(--c-sus)} #defText .cat{color:var(--c-mod);font-weight:700}
+.progress{height:8px;margin:0 20px;border:1px solid var(--line);border-radius:999px;background:var(--field);overflow:hidden}
+#progressBar{height:100%;width:0%;background:linear-gradient(90deg,var(--cy),var(--vio),var(--c-adj));box-shadow:0 0 14px rgba(139,92,246,.6);transition:width .2s}
+.con-ctrl{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;flex-wrap:wrap;background:var(--card2);border-top:1px solid var(--line)}
+.ctrl-group{display:flex;align-items:center;gap:10px}
+.cbtn{width:46px;height:46px;border-radius:13px;border:1px solid var(--line);background:var(--field);color:var(--muted);cursor:pointer;font-size:1rem;transition:.25s;display:flex;align-items:center;justify-content:center}
+.cbtn:hover{color:var(--txt);border-color:var(--c-act);box-shadow:0 0 16px rgba(34,211,238,.4);transform:translateY(-2px)}
+.playbtn{cursor:pointer;border:none;border-radius:15px;padding:15px 30px;font-family:'Inter',sans-serif;font-weight:800;font-size:.85rem;letter-spacing:.06em;color:#fff;
+  background:linear-gradient(90deg,var(--vio),var(--cy));box-shadow:0 0 22px rgba(6,182,212,.45);transition:.25s;display:flex;align-items:center;gap:10px;animation:playpulse 2.6s infinite}
+@keyframes playpulse{0%,100%{box-shadow:0 0 16px rgba(6,182,212,.35)}50%{box-shadow:0 0 34px rgba(139,92,246,.65)}}
+.playbtn:hover{transform:scale(1.04)}
+.playbtn:active{transform:scale(.97)}
+.counter{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.14em;color:var(--muted)}
+.counter b{color:var(--c-act);text-shadow:0 0 8px rgba(34,211,238,.6)}
+/* ======= LEYENDA ======= */
+.legend{margin:22px 0 8px;padding:20px 22px}
+.legend h4{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;font-family:'JetBrains Mono',monospace}
+.lg-row{display:flex;flex-wrap:wrap;gap:9px}
+.lg{display:inline-flex;align-items:center;gap:7px;font-size:.68rem;font-weight:700;padding:7px 12px;border-radius:9px;border:1px solid var(--line);background:var(--field);transition:.25s;cursor:default}
+.lg:hover{transform:translateY(-2px);box-shadow:0 0 12px rgba(148,163,184,.25)}
+.lg i{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.lg-note{margin-top:14px;font-size:.7rem;color:var(--muted);line-height:1.6}
+.lg-note b{color:var(--c-act)}
+/* ======= EFECTO VIVO 4D ======= */
+.alive{animation:alive4d .9s ease}
+@keyframes alive4d{
+  0%{filter:none}
+  22%{filter:brightness(1.35) saturate(1.6) hue-rotate(12deg);box-shadow:0 0 40px rgba(34,211,238,.55),inset 0 0 30px rgba(139,92,246,.3)}
+  55%{filter:brightness(1.15) saturate(1.3) hue-rotate(-10deg);box-shadow:0 0 22px rgba(139,92,246,.45),inset 0 0 16px rgba(34,211,238,.2)}
+  100%{filter:none}}
+/* ======= TOAST / FOOTER ======= */
+#toast{position:fixed;bottom:24px;right:24px;z-index:90;background:var(--card2);border:1px solid rgba(6,182,212,.45);color:var(--txt);
+  border-radius:14px;padding:13px 20px;font-size:.76rem;font-family:'JetBrains Mono',monospace;box-shadow:0 0 26px rgba(6,182,212,.35);
+  opacity:0;transform:translateY(16px);transition:.4s;pointer-events:none;max-width:320px}
+#toast.show{opacity:1;transform:none}
+footer{border-top:1px solid var(--line);margin-top:40px;padding:26px 20px;text-align:center;color:var(--muted2);font-size:.7rem;font-family:'JetBrains Mono',monospace;letter-spacing:.08em}
+footer b{color:var(--c-act)}
+</style>
+</head>
+<body>
+<div class="bgglow g1"></div><div class="bgglow g2"></div><div class="bgglow g3"></div>
+<div class="gridfloor"></div>
+
+<header>
+  <div class="h-in">
+    <div class="logo-badge">D</div>
+    <div class="logo-t"><b>Discovery <span>MAX</span></b><small>Neuroeducation Networks</small></div>
+    <span class="nbf-live">MÉTODO NBF ACTIVE ONLINE</span>
+    <button class="iconbtn" id="audioBtn" title="Sonidos gravitacionales">🔊</button>
+    <button class="iconbtn" id="themeBtn" title="Fondo oscuro / claro">🌙</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section class="hero">
+    <span class="kick">La Revolución Cognitiva Adulta</span>
+    <h1>Los verbos en inglés <em>no existen</em>.</h1>
+    <p>Sustituimos el dañino <b>"según el contexto"</b> por una <b>Certeza Neurocognitiva</b>: 7 elementos determinantes que operan de manera matemática. Entra a la cabina: toca los paneles, escucha el pulso gravitacional y descifra la arquitectura del inglés a velocidad neural.</p>
+    <div class="stats">
+      <span class="stat">VERBOS = <b>0</b></span>
+      <span class="stat">ELEMENTOS = <b>7</b></span>
+      <span class="stat">CERT_COG = <b>100%</b></span>
+      <span class="stat">OS = <b>ENSAMBLAJE LEGO</b></span>
+    </div>
+  </section>
+
+  <!-- ============ SIMULADOR ============ -->
+  <section class="sim-area">
+
+    <!-- PANEL DE CONTROL NEÓN -->
+    <div class="glass panel-neon">
+      <div class="p-head">
+        <span class="ico">⚙️</span>
+        <h3>Panel de Control</h3>
+        <span class="leds"><span class="led c"></span><span class="led v" style="animation-delay:.3s"></span><span class="led g" style="animation-delay:.6s"></span><span class="led a" style="animation-delay:.9s"></span></span>
+      </div>
+
+      <label class="lb">Selecciona Lección Práctica</label>
+      <select id="lessonSelect">
+        <option value="vacation">Lección 13: A Vacation Abroad</option>
+        <option value="airport">Lección 14: At the Airport</option>
+        <option value="custom">✍️ Usar Texto Propio / Personalizado</option>
+      </select>
+
+      <div id="customBox" class="hidden">
+        <label class="lb">Pega tu texto en Inglés</label>
+        <textarea id="customInput" placeholder="Paste your English text here..."></textarea>
+        <button class="btn load" id="loadCustomBtn">⬆ Cargar Texto</button>
+      </div>
+
+      <div class="speedrow" style="margin-top:18px">
+        <label class="lb" style="margin:0">Velocidad de Lectura</label>
+        <span class="speedval" id="speedValue">260 PPM</span>
+      </div>
+      <input type="range" id="speedSlider" min="80" max="600" step="10" value="260">
+      <div class="rangelab"><span>80 PPM (Analítico)</span><span>350 PPM</span><span>600+ PPM (Automático)</span></div>
+
+      <label class="lb">Tamaño del Bloque Visual</label>
+      <div class="chunkgrid">
+        <button class="chunkbtn" data-mode="short" id="chunk-short">Línea Corta</button>
+        <button class="chunkbtn on" data-mode="medium" id="chunk-medium">Renglón Medio</button>
+        <button class="chunkbtn" data-mode="sentence" id="chunk-sentence">Oración Completa</button>
+      </div>
+
+      <label class="lb">Marcadores de Color NBF</label>
+      <button class="btn" id="hlBtn" style="width:100%;border-color:rgba(6,182,212,.45);color:var(--c-act);background:rgba(6,182,212,.08)">🎨 Activados</button>
+
+      <div class="minicard">
+        <h4><span>🎯</span> El Fin de la Traducción</h4>
+        <p>Al proyectar <b>líneas completas</b> en lugar de palabras aisladas, tu cerebro inhibe el reflejo de buscar equivalencias del español. Los marcadores del <b>Sistema Operativo NBF</b> revelan la arquitectura matemática del inglés a altas velocidades. <b>Toca cualquier palabra</b> para descubrir su elemento.</p>
+      </div>
+    </div>
+
+    <!-- CONSOLA PANTALLA -->
+    <div class="glass console">
+      <div class="con-top">
+        <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
+        <canvas id="eeg" width="150" height="30"></canvas>
+        <span class="con-status">NEURAL SIMULATION ACTIVE // VERBOS = <b>0</b> // CERT_COG = <b>100%</b></span>
+      </div>
+
+      <div class="screen">
+        <span class="hud tl2"></span><span class="hud tr"></span><span class="hud bl"></span><span class="hud br"></span>
+        <div class="guide l"><span>MARGEN PERIFÉRICO IZQ</span></div>
+        <div class="guide r"><span style="left:auto;right:4px">MARGEN PERIFÉRICO DER</span></div>
+        <span class="memtag">Memorización Activa</span>
+        <div id="activeTextLine"><span class="idlemsg">Presiona <b>INICIAR SIMULACIÓN</b> para entrenar tu cerebro</span></div>
+        <div id="definer"><span id="defText">Haz clic en cualquier palabra resaltada para ver su elemento NBF</span></div>
+      </div>
+
+      <div class="progress"><div id="progressBar"></div></div>
+
+      <div class="con-ctrl">
+        <div class="ctrl-group">
+          <button class="cbtn" id="prevBtn" title="Renglón anterior">◀</button>
+          <button class="playbtn" id="playBtn"><span id="playIco">▶</span><span id="playTxt">Iniciar Simulación</span></button>
+          <button class="cbtn" id="nextBtn" title="Renglón siguiente">▶</button>
+          <button class="cbtn" id="resetBtn" title="Reiniciar">⟲</button>
+        </div>
+        <span class="counter">Renglón: <b id="curIdx">0</b> / <span id="totIdx">0</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LEYENDA ============ -->
+  <div class="glass legend">
+    <h4>// Mapa de color · Sistema Operativo NBF</h4>
+    <div class="lg-row">
+      <span class="lg" style="color:var(--c-act)"><i></i>PPD Activador (sujeto)</span>
+      <span class="lg" style="color:var(--c-obj)"><i></i>Pronombre Objeto</span>
+      <span class="lg" style="color:var(--c-pos)"><i></i>Posesivos</span>
+      <span class="lg" style="color:var(--c-sus)"><i></i>Sustantivos (Noun)</span>
+      <span class="lg" style="color:var(--c-pre)"><i></i>Preposiciones</span>
+      <span class="lg" style="color:var(--c-adj)"><i></i>Adjetivos</span>
+      <span class="lg" style="color:var(--c-adv)"><i></i>Adverbios</span>
+      <span class="lg" style="color:var(--c-aux)"><i></i>Palabras Auxiliares</span>
+      <span class="lg" style="color:var(--c-mod)"><i></i>Palabras Modales</span>
+      <span class="lg" style="color:var(--c-art)"><i></i>Artículos</span>
+    </div>
+    <p class="lg-note">⚠️ <b>Solo los PPD en función de sujeto (cian)</b> son activadores: encienden la palabra base. Los pronombres objeto (<i>me, him, them…</i>) y los posesivos (<i>my, their…</i>) <b>NO activan sustantivos</b>: reciben o determinan. En NBF la categoría "verbo" no existe.</p>
+  </div>
+</div>
+
+<footer>© 2026 Discovery MAX Neuroeducation Networks · Platform v3.0 NEURAL-CAB · Autor: <b>Toño Vicas</b></footer>
+<div id="toast"></div>
+
+<script>
+/* ================= AUDIO GRAVITACIONAL ================= */
+let audioOn=true,actx=null;
+function ac(){if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(actx&&actx.state==='suspended')actx.resume();return actx;}
+function gravSfx(){ if(!audioOn)return; const c=ac(); if(!c)return; const t=c.currentTime;
+  const o=c.createOscillator(),g=c.createGain(),f=c.createBiquadFilter();
+  o.type='sine'; o.frequency.setValueAtTime(72,t); o.frequency.exponentialRampToValueAtTime(26,t+.7);
+  f.type='lowpass'; f.frequency.value=220;
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.16,t+.03); g.gain.exponentialRampToValueAtTime(.0001,t+.85);
+  o.connect(f);f.connect(g);g.connect(c.destination); o.start(t); o.stop(t+.9);
+  const o2=c.createOscillator(),g2=c.createGain();
+  o2.type='triangle'; o2.frequency.setValueAtTime(144,t); o2.frequency.exponentialRampToValueAtTime(52,t+.5);
+  g2.gain.setValueAtTime(0,t); g2.gain.linearRampToValueAtTime(.05,t+.02); g2.gain.exponentialRampToValueAtTime(.0001,t+.55);
+  o2.connect(g2);g2.connect(c.destination); o2.start(t); o2.stop(t+.6);
+}
+function blipSfx(f){ if(!audioOn)return; const c=ac(); if(!c)return; const t=c.currentTime;
+  const o=c.createOscillator(),g=c.createGain();
+  o.type='sine'; o.frequency.value=f||720;
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.05,t+.012); g.gain.exponentialRampToValueAtTime(.0001,t+.22);
+  o.connect(g);g.connect(c.destination); o.start(t); o.stop(t+.25);
+}
+function sweepSfx(up){ if(!audioOn)return; const c=ac(); if(!c)return; const t=c.currentTime;
+  const o=c.createOscillator(),g=c.createGain();
+  o.type='sawtooth'; o.frequency.setValueAtTime(up?110:320,t); o.frequency.exponentialRampToValueAtTime(up?340:90,t+.4);
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.04,t+.03); g.gain.exponentialRampToValueAtTime(.0001,t+.45);
+  o.connect(g);g.connect(c.destination); o.start(t); o.stop(t+.5);
+}
+document.getElementById('audioBtn').addEventListener('click',function(){
+  audioOn=!audioOn; this.textContent=audioOn?'🔊':'';
+  if(audioOn)gravSfx(); showToast(audioOn?'Sonidos gravitacionales activados':'Audio silenciado');
+});
+/* ================= TEMA ================= */
+document.getElementById('themeBtn').addEventListener('click',function(){
+  const l=document.documentElement.classList.toggle('light');
+  this.textContent=l?'☀️':'🌙';
+  showToast(l?'Modo claro: contraste máximo':'Modo oscuro neural');
+  gravSfx();
+});
+/* ================= EFECTO VIVO 4D ================= */
+document.addEventListener('pointerdown',e=>{
+  if(e.target.closest('.nbfw'))return;
+  const p=e.target.closest('.glass,.playbtn,.cbtn,.btn,.chunkbtn');
+  if(p){p.classList.remove('alive');void p.offsetWidth;p.classList.add('alive');
+    (p.classList.contains('glass'))?gravSfx():blipSfx(560);}
+});
+/* ================= TOAST ================= */
+let toastT=null;
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3000);}
+/* ================= EEG ================= */
+(function(){const cv=document.getElementById('eeg'),cx=cv.getContext('2d');let ph=0;
+ (function draw(){cx.clearRect(0,0,150,30);cx.beginPath();
+  for(let x=0;x<150;x++){const y=15+Math.sin((x+ph)*.14)*6*Math.sin((x+ph)*.021)+Math.sin((x+ph)*.4)*2.4;
+   x?cx.lineTo(x,y):cx.moveTo(x,y);}
+  cx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--c-act').trim()||'#22d3ee';
+  cx.lineWidth=1.4;cx.shadowBlur=6;cx.shadowColor=cx.strokeStyle;cx.stroke();cx.shadowBlur=0;
+  ph+=2;requestAnimationFrame(draw);})();})();
+/* ================= LÉXICO NBF (COLORES CORREGIDOS) ================= */
+const L={
+ act:['i','you','he','she','it','we','they',"i'm","you're","he's","she's","it's","we're","they're"],
+ obj:['me','him','her','us','them','whom'],
+ pos:['my','your','his','its','our','their','mine','yours','hers','ours','theirs','whose'],
+ art:['the','a','an'],
+ pre:['to','of','in','on','at','by','for','with','about','through','throughout','into','during','before','after','above','below','up','out','down','from','over','under','between','among','against','off','onto'],
+ aux:['am','is','are','was','were','be','been','being','do','does','did','done','have','has','had','having',"don't","doesn't","didn't","haven't","hasn't","hadn't",'gonna','going'],
+ mod:['will','would','can','could','should','may','might','must','shall','ought',"won't","wouldn't","can't","couldn't","shouldn't"],
+ adj:['eager','best','foreign','several','hard','next','excellent','expensive','exciting','another','final','ready','commercial','plenty','early','certain','lucky','extra','boarding','short','corresponding','first','european','allowed','allow','hot','cold','happy','sad','empty','full','young','old','beautiful','unique','own','other','same','whole','able'],
+ adv:['sure','first','finally','so','even','more','although','too','very','not','just','then','there','always','never','already','quite','here','why','otherwise','else','late','well','how','soon','where','enough','straight','abroad'],
+ sus:['williams','trip','countries','country','europe','internet','agency','options','spain','france','italy','dutchland','objective','april','year','vacation','week','spring','packages','package','flight','train','places','place','choice','family','runway','voyage','daybreak','reception','luggage','airline','scale','relief','james','amount','mom','weight','desk','agent','passports','passport','itinerary','visas','visa','insurance','declaration','presence','cards','card','tabs','tab','schedule','terminal','gate','announcement','wait','exit','stopover','ticket','airport','customs','hours','hour','day','days','month','months','people','person','water','book','books','watch','watches','need','house','home','city','street','streets','memories','memory','object','room','living','spring']
+};
+const NOUN_ES={can:'lata',book:'libro / reserva',watch:'reloj',water:'agua',trip:'viaje',countries:'países',country:'país',flight:'vuelo',train:'tren',agency:'agencia',family:'familia',luggage:'equipaje',passport:'pasaporte',passports:'pasaportes',ticket:'boleto',airport:'aeropuerto',gate:'puerta',schedule:'horario',vacation:'vacaciones',spring:'primavera',year:'año',week:'semana',day:'día',hour:'hora',people:'personas',house:'casa',home:'hogar',city:'ciudad',street:'calle',need:'necesidad',scale:'balanza',weight:'peso',agent:'agente',desk:'mostrador',insurance:'seguro',presence:'presencia',declaration:'declaración',cards:'tarjetas',tabs:'etiquetas',terminal:'terminal',announcement:'anuncio',exit:'salida',stopover:'escala',voyage:'travesía',runway:'pista',daybreak:'amanecer',reception:'recepción',airline:'aerolínea',amount:'cantidad',mom:'mamá',relief:'alivio',williams:'Williams (nombre)',europe:'Europa',spain:'España',france:'Francia',italy:'Italia',internet:'internet',options:'opciones',objective:'objetivo',april:'abril',packages:'paquetes',places:'lugares',choice:'elección',memories:'recuerdos',object:'objeto',room:'sala',wait:'espera',customs:'aduana',itinerary:'itinerario',visas:'visas',weight:'peso'};
+const META={
+ act:{n:'PPD ACTIVADOR',c:'Columna 1',d:'Pronombre personal directo en función de sujeto: el botón de PLAY que enciende la palabra base.'},
+ obj:{n:'PRONOMBRE OBJETO',c:'Receptor',d:'Recibe la acción. NO activa sustantivos: no es activador.'},
+ pos:{n:'POSESIVO',c:'Determinante',d:'Indica pertenencia. NO activa sustantivos: no es activador.'},
+ art:{n:'ARTÍCULO',c:'Determinante',d:'Presenta y acompaña al sustantivo.'},
+ sus:{n:'SUSTANTIVO (NOUN)',c:'Columna 2',d:'Núcleo nominal: base estática lista para ser activada.'},
+ pre:{n:'PREPOSICIÓN',c:'Columna 3',d:'Partícula de relación espacial, temporal o lógica.'},
+ adj:{n:'ADJETIVO',c:'Columna 4',d:'Cualidad o atributo colocado antes del sustantivo.'},
+ adv:{n:'ADVERBIO',c:'Columna 5',d:'Modificador de modo, tiempo o lugar.'},
+ aux:{n:'PALABRA AUXILIAR (P.A.)',c:'Columna 6',d:'Conversor sintáctico de soporte. Nunca "verbo auxiliar".'},
+ mod:{n:'PALABRA MODAL',c:'Columna 7',d:'Operador de posibilidad o necesidad. Nunca "verbo modal".'}
+};
+function catOf(w){
+  if(L.act.includes(w))return 'act'; if(L.obj.includes(w))return 'obj'; if(L.pos.includes(w))return 'pos';
+  if(L.art.includes(w))return 'art'; if(L.pre.includes(w))return 'pre'; if(L.aux.includes(w))return 'aux';
+  if(L.mod.includes(w))return 'mod'; if(L.adj.includes(w))return 'adj'; if(L.adv.includes(w))return 'adv';
+  if(L.sus.includes(w))return 'sus'; if(w.length>3)return 'sus'; return '';
+}
+/* ================= LECCIONES ================= */
+const lessons={
+ vacation:`The Williams are planning their trip to foreign countries. They will visit several countries throughout Europe. They sure are eager to get going. First they will check through the internet a travel agency that can offer the best options for them.
+They would like to go to Spain, France, Italy and to wrap it up in Dutchland. They’re working hard as a whole to obtain their objective. They would like to be able to travel by April of next year on Easter week’s vacation and enjoy the spring in Europe.
+At the Sunshine Travel Agency the packages are excellent, the flight to Spain is not so expensive and from there they could travel by train to the other places they wish to visit, which makes it even more exciting. Although they plan to check with another agency to make the choice.`,
+ airport:`The Williams Family is finally at the Runway ready to set off on their voyage to Europe. It’s the daybreak and they have enough time to check in at the commercial airline reception. They have plenty of luggage, reason why they dropped by so early. They are certain that if their luggage weighs more than what the airline grants, they are gonna be in for it.
+They continue to place it on the scale to be weight.
+“Oh boy, what a relief” says Mr. James “I thought that it was gonna go over the amount allowed, we sure are lucky your mom didn’t pack up anything else, otherwise we would have had to pay up for the extra weight”, they all laughed.
+Over at the customs desk the agent in charge asks them to show their passports, itinerary, visas, travel health insurance and their declaration of presence. After he goes over them, he hands them over their boarding cards and luggage tabs.
+After they check the departure schedule, they head straight to the terminal departure gate to wait for their flight’s announcement; they hope that their departure flight will be on time. After a short wait, their flight had been announced; they headed up to the corresponding exit gate, in a short while they will set off to their first European stopover, Spain.`
+};
+/* ================= ESTADO ================= */
+let chunks=[],idx=0,playing=false,timer=null,mode='medium',wpm=260,hl=true,currentText=lessons.vacation;
+const $=id=>document.getElementById(id);
+/* ================= SEGMENTADOR ================= */
+function segment(text,m){
+  const out=[];
+  text.split(/\n\n/).forEach(p=>{
+    if(!p.trim())return;
+    (p.match(/[^.!?]+[.!?]*/g)||[p]).forEach(s=>{
+      const t=s.trim(); if(!t)return;
+      const w=t.split(/\s+/);
+      if(m==='short'){for(let i=0;i<w.length;i+=3){const c=w.slice(i,i+3).join(' ');if(c)out.push(c);}}
+      else if(m==='medium'){
+        if(w.length>10){t.split(/,\s*/).forEach((cl,i,arr)=>{let v=cl.trim();if(!v)return;if(i<arr.length-1)v+=',';out.push(v);});}
+        else out.push(t);
+      } else out.push(t);
+    });
+  });
+  return out;
+}
+/* ================= COLORIZER ================= */
+function colorize(line){
+  return line.split(/(\s+)/).map(tk=>{
+    if(/^\s+$/.test(tk))return tk;
+    const m=tk.match(/^([^a-zA-Z0-9'’]*)([a-zA-Z0-9'’-]+)([^a-zA-Z0-9'’]*)$/);
+    if(!m)return tk;
+    const cat=catOf(m[2].toLowerCase());
+    if(!cat)return tk;
+    return `${m[1]}<span class="nbfw w-${cat}" data-cat="${cat}" data-word="${m[2]}">${m[2]}</span>${m[3]}`;
+  }).join('');
+}
+/* ================= VISTA ================= */
+function view(){
+  const vp=$('activeTextLine');
+  if(!chunks.length){vp.innerHTML='<span class="idlemsg">No hay contenido cargado.</span>';$('curIdx').textContent='0';$('totIdx').textContent='0';$('progressBar').style.width='0%';return;}
+  const line=chunks[idx];
+  vp.innerHTML=hl?colorize(line):line;
+  $('curIdx').textContent=idx+1; $('totIdx').textContent=chunks.length;
+  $('progressBar').style.width=((idx+1)/chunks.length*100)+'%';
+}
+function reload(){chunks=segment(currentText,mode);idx=0;view();}
+/* ================= DEFINIDOR ================= */
+$('activeTextLine').addEventListener('click',e=>{
+  const w=e.target.closest('.nbfw'); if(!w)return;
+  const cat=w.dataset.cat,word=w.dataset.word,m=META[cat];
+  const nn=NOUN_ES[word.toLowerCase()];
+  const nounPart=nn?`sustantivo: <span class="nn">"${nn}"</span> ⇒ `:'';
+  const remind=(cat==='mod'||cat==='aux')?' <b>· Recordatorio: la categoría "verbo" no existe en NBF.</b>':'';
+  $('defText').innerHTML=`<b>"${word}"</b> ${nounPart}⇒ <span class="cat">${m.n} · ${m.c}</span> — ${m.d}${remind}`;
+  $('definer').classList.add('show');
+  blipSfx(cat==='mod'?880:cat==='act'?990:700);
+});
+/* ================= CONTROLES ================= */
+$('lessonSelect').addEventListener('change',function(){
+  stop();
+  if(this.value==='custom'){$('customBox').classList.remove('hidden');currentText=$('customInput').value||'Introduce tu propio texto aquí...';}
+  else{$('customBox').classList.add('hidden');currentText=lessons[this.value];}
+  reload(); showToast('Lección cargada en la cabina neural');
+});
+$('loadCustomBtn').addEventListener('click',()=>{stop();currentText=$('customInput').value||'Pega tu texto en este recuadro para analizar.';reload();showToast('Texto personalizado cargado.');});
+$('customInput').addEventListener('input',()=>{if($('lessonSelect').value==='custom'){currentText=$('customInput').value;reload();}});
+$('speedSlider').addEventListener('input',function(){wpm=+this.value;$('speedValue').textContent=wpm+' PPM';if(playing){stop();play();}});
+document.querySelectorAll('.chunkbtn').forEach(b=>b.addEventListener('click',()=>{
+  mode=b.dataset.mode;
+  document.querySelectorAll('.chunkbtn').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); reload();
+}));
+$('hlBtn').addEventListener('click',function(){
+  hl=!hl;
+  this.textContent=hl?'🎨 Activados':' Desactivados';
+  this.style.color=hl?'var(--c-act)':'var(--muted)';
+  this.style.background=hl?'rgba(6,182,212,.08)':'var(--field)';
+  view();
+});
+$('playBtn').addEventListener('click',()=>{playing?stop():play();});
+$('nextBtn').addEventListener('click',()=>{stop();if(idx<chunks.length-1){idx++;view();}blipSfx(620);});
+$('prevBtn').addEventListener('click',()=>{stop();if(idx>0){idx--;view();}blipSfx(520);});
+$('resetBtn').addEventListener('click',()=>{stop();idx=0;view();$('definer').classList.remove('show');showToast('Simulador restablecido al inicio.');});
+function play(){
+  if(!chunks.length)return;
+  playing=true;$('playTxt').textContent='Pausar Simulación';$('playIco').textContent='⏸';
+  sweepSfx(true); showToast('Simulador de Lectura NBF en marcha...');
+  (function next(){
+    if(!playing)return;
+    if(idx>=chunks.length-1){stop();showToast('Entrenamiento de lección completado.');return;}
+    const wc=chunks[idx].split(/\s+/).length;
+    const delay=Math.max((60000/wpm)*wc,1400);
+    timer=setTimeout(()=>{idx++;view();next();},delay);
+  })();
+}
+function stop(){
+  playing=false;clearTimeout(timer);
+  $('playTxt').textContent='Iniciar Simulación';$('playIco').textContent='▶';
+}
+/* INIT */
+reload();
+</script>
+</body>
+</html>
