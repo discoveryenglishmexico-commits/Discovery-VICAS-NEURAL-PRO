@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discovery MAX NBF & APEX — Plataforma Neurocognitiva</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5/index.css">
+<style>
+:root{
+  --bg:#05070c; --bg2:#0a0f1c;
+  --card:rgba(12,17,32,.74); --card2:rgba(8,12,24,.85); --field:#0b1020;
+  --line:rgba(148,163,184,.16); --txt:#e2e8f0; --muted:#94a3b8; --muted2:#64748b;
+  --cy:#06b6d4; --cy2:#22d3ee; --vio:#8b5cf6; --vio2:#a78bfa; --em:#10b981; --em2:#4ade80;
+  --am:#f59e0b; --am2:#fbbf24; --ro:#ec4899; --ro2:#f472b6; --ind:#6366f1; --ind2:#818cf8; --or:#f97316; --or2:#fb923c;
+}
+html.light{
+  --bg:#eef2f7; --bg2:#e2e8f0;
+  --card:rgba(255,255,255,.88); --card2:rgba(248,250,252,.92); --field:#ffffff;
+  --line:rgba(15,23,42,.14); --txt:#0f172a; --muted:#475569; --muted2:#64748b;
+  --cy2:#0e7490; --vio2:#6d28d9; --em2:#15803d; --am2:#b45309; --ro2:#be185d; --ind2:#4338ca; --or2:#c2410c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;transition:background .35s,color .35s}
+.mono{font-family:'JetBrains Mono',monospace}
+.bgglow{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0;animation:breath 9s ease-in-out infinite}
+.g1{top:-140px;left:-120px;width:420px;height:420px;background:rgba(139,92,246,.20)}
+.g2{top:40%;right:-140px;width:420px;height:420px;background:rgba(6,182,212,.14);animation-delay:-3s}
+.g3{bottom:-160px;left:30%;width:460px;height:460px;background:rgba(16,185,129,.12);animation-delay:-6s}
+html.light .bgglow{opacity:.4}
+@keyframes breath{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:.95;transform:scale(1.06)}}
+.gridfloor{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(148,163,184,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.05) 1px,transparent 1px);
+  background-size:44px 44px;mask-image:radial-gradient(ellipse at 50% 40%,#000 30%,transparent 75%)}
+.wrap{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 20px}
+/* ============ HEADER ============ */
+header{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);background:var(--card);border-bottom:1px solid var(--line)}
+.h-in{max-width:1280px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo-badge{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--vio),var(--cy));display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 0 18px rgba(139,92,246,.5)}
+.logo-t b{font-size:1rem}
+.logo-t b span{color:var(--cy2)}
+.logo-t small{display:block;font-size:.58rem;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+nav.main{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+nav.main a{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:9px;border:1px solid transparent;transition:.25s}
+nav.main a:hover{color:var(--cy2);border-color:rgba(6,182,212,.4);box-shadow:0 0 14px rgba(34,211,238,.3);text-shadow:0 0 8px rgba(34,211,238,.6)}
+.nbf-live{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.14em;color:var(--cy2);
+  border:1px solid rgba(6,182,212,.45);background:rgba(6,182,212,.08);padding:7px 13px;border-radius:999px;animation:liveblink 2.2s infinite;white-space:nowrap}
+@keyframes liveblink{0%,100%{box-shadow:0 0 6px rgba(6,182,212,.25);opacity:.85}50%{box-shadow:0 0 20px rgba(6,182,212,.65);opacity:1}}
+.iconbtn{width:40px;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--field);color:var(--muted);cursor:pointer;font-size:1.02rem;transition:.25s}
+.iconbtn:hover{color:var(--txt);border-color:var(--cy2);box-shadow:0 0 14px rgba(34,211,238,.35);transform:translateY(-2px)}
+#eeg{width:110px;height:28px;opacity:.9}
+@media(max-width:900px){nav.main{display:none}}
+/* ============ HERO ============ */
+.hero{padding:80px 0 40px;text-align:center;position:relative}
+.hero .kick{display:inline-flex;align-items:center;gap:8px;font-size:.66rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--vio2);
+  border:1px solid rgba(139,92,246,.4);background:rgba(139,92,246,.09);padding:8px 18px;border-radius:999px;margin-bottom:20px}
+.hero h1{font-size:clamp(2.1rem,5.6vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.12;max-width:900px;margin:0 auto}
+.hero h1 .grad{background:linear-gradient(90deg,var(--cy2),var(--vio2),var(--ro2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:840px;margin:18px auto 0;color:var(--muted);font-size:clamp(.95rem,1.7vw,1.12rem);line-height:1.7}
+.hero p b{color:var(--txt)}
+.cta-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:32px}
+.btn-neon{font-family:'Space Grotesk','Inter',sans-serif;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem;
+  padding:15px 30px;border-radius:13px;cursor:pointer;text-decoration:none;position:relative;overflow:hidden;transition:.3s;
+  border:1px solid var(--cy);color:var(--cy2);background:rgba(6,182,212,.06)}
+.btn-neon::after{content:'';position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.25),transparent);transition:.6s}
+.btn-neon:hover::after{left:130%}
+.btn-neon:hover{color:#fff;background:rgba(6,182,212,.18);box-shadow:0 0 26px rgba(34,211,238,.55),inset 0 0 16px rgba(34,211,238,.2);transform:translateY(-3px)}
+.btn-neon.vi{border-color:var(--vio);color:var(--vio2);background:rgba(139,92,246,.07)}
+.btn-neon.vi:hover{background:rgba(139,92,246,.18);box-shadow:0 0 26px rgba(139,92,246,.55),inset 0 0 16px rgba(139,92,246,.2);color:#fff}
+/* ============ SECCIONES ============ */
+section{padding:74px 0;position:relative}
+.sec-head{text-align:center;max-width:820px;margin:0 auto 46px}
+.sec-head .k{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:var(--cy2);text-shadow:0 0 12px rgba(34,211,238,.5);display:block;margin-bottom:12px}
+.sec-head .k.v{color:var(--vio2);text-shadow:0 0 12px rgba(139,92,246,.5)}
+.sec-head .k.r{color:var(--ro2);text-shadow:0 0 12px rgba(236,72,153,.5)}
+.sec-head h2{font-size:clamp(1.7rem,4vw,2.6rem);font-weight:800;letter-spacing:-.01em}
+.sec-head p{color:var(--muted);margin-top:14px;font-size:.98rem}
+.glass{background:var(--card);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:20px;position:relative;transition:background .35s,border-color .35s,transform .35s,box-shadow .35s}
+/* tarjetas paradigma / neuro */
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
+.scard{padding:34px;display:flex;flex-direction:column;justify-content:space-between;gap:22px;overflow:hidden}
+.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--sc,var(--cy)),transparent);opacity:.6;transition:.4s}
+.scard:hover{transform:translateY(-6px);border-color:var(--sc,var(--cy));box-shadow:0 18px 46px rgba(0,0,0,.35),0 0 26px color-mix(in srgb,var(--sc,var(--cy)) 25%,transparent)}
+.scard:hover::before{opacity:1}
+.scard .ico{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:18px;
+  background:color-mix(in srgb,var(--sc,var(--cy)) 12%,transparent);box-shadow:inset 0 0 16px color-mix(in srgb,var(--sc,var(--cy)) 14%,transparent)}
+.scard h3{font-size:1.35rem;font-weight:800;margin-bottom:12px}
+.scard p{color:var(--muted);font-size:.92rem;line-height:1.75}
+.scard p b{color:var(--txt)}
+.scard .foot{border-top:1px solid var(--line);padding-top:16px;font-size:.78rem;font-weight:700;color:var(--sc,var(--cy))}
+.scard .footm{border-top:1px solid var(--line);padding-top:14px;font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--muted2);letter-spacing:.1em}
+/* grid 7 elementos */
+.elgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.elcard{padding:26px;border-radius:18px;background:var(--card2);border:1px solid var(--line);transition:.3s;position:relative;overflow:hidden}
+.elcard::after{content:'';position:absolute;inset:0;opacity:0;transition:.3s;pointer-events:none;background:radial-gradient(circle at 50% 0%,color-mix(in srgb,var(--ec,var(--cy)) 12%,transparent),transparent 65%)}
+.elcard:hover{transform:translateY(-5px);border-color:var(--ec,var(--cy));box-shadow:0 14px 36px rgba(0,0,0,.3),0 0 20px color-mix(in srgb,var(--ec,var(--cy)) 28%,transparent)}
+.elcard:hover::after{opacity:1}
+.elcard .num{font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:700;letter-spacing:.2em;color:var(--muted2);margin-bottom:10px}
+.elcard h4{font-size:1.02rem;font-weight:800;margin-bottom:8px;color:var(--txt)}
+.elcard p{font-size:.8rem;color:var(--muted);line-height:1.65}
+.elcard.dash{border-style:dashed;border-color:color-mix(in srgb,var(--cy) 45%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;background:color-mix(in srgb,var(--cy) 6%,var(--card2))}
+.elcard.dash .big{font-size:1.9rem;animation:bob 2.4s infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+/* ecuaciones */
+.eqgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+.eqcard{padding:32px;text-align:center;border-radius:22px}
+.eqcard .ico{width:56px;height:56px;margin:0 auto 18px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+  background:color-mix(in srgb,var(--sc,var(--cy)) 12%,transparent);box-shadow:0 0 18px color-mix(in srgb,var(--sc,var(--cy)) 25%,transparent)}
+.eqcard .tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2);display:block;margin-bottom:10px}
+.eqcard h4{font-size:1.08rem;font-weight:800;margin-bottom:12px}
+.eqcard p{font-size:.84rem;color:var(--muted);line-height:1.7}
+.eqcard:hover{transform:scale(1.02);border-color:var(--sc,var(--cy));box-shadow:0 0 30px color-mix(in srgb,var(--sc,var(--cy)) 22%,transparent)}
+/* ============ PORTALES DE ACCESO ============ */
+.gates{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:26px}
+.portal{display:flex;flex-direction:column;gap:16px;padding:36px 32px;border-radius:26px;text-decoration:none;color:var(--txt);
+  background:var(--card);border:1px solid color-mix(in srgb,var(--pc) 45%,transparent);position:relative;overflow:hidden;transition:.35s}
+.portal::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--pc),var(--pc2),transparent);opacity:.85;animation:gateblink 2.8s infinite}
+@keyframes gateblink{0%,100%{opacity:.45;filter:brightness(1)}50%{opacity:1;filter:brightness(1.6)}}
+.portal::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;transition:.4s;
+  background:radial-gradient(circle at 50% 110%,color-mix(in srgb,var(--pc) 16%,transparent),transparent 60%)}
+.portal:hover{transform:translateY(-8px) scale(1.015);border-color:var(--pc);
+  box-shadow:0 22px 60px rgba(0,0,0,.45),0 0 40px color-mix(in srgb,var(--pc) 35%,transparent),inset 0 0 30px color-mix(in srgb,var(--pc) 8%,transparent)}
+.portal:hover::after{opacity:1}
+.portal .leds{display:flex;gap:9px;position:absolute;top:16px;right:20px}
+.led{width:7px;height:7px;border-radius:50%;background:#232a44;animation:ledblink 2s infinite}
+.led.c{--lc:var(--cy2)} .led.v{--lc:var(--vio2)} .led.g{--lc:#2bffa7} .led.m{--lc:var(--ro2)} .led.a{--lc:var(--am2)}
+@keyframes ledblink{0%,100%{background:#232a44;box-shadow:none}14%{background:var(--lc);box-shadow:0 0 9px var(--lc),0 0 18px var(--lc)}32%{background:#232a44;box-shadow:none}}
+.portal .p-ico{width:70px;height:70px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:2rem;
+  background:color-mix(in srgb,var(--pc) 14%,transparent);border:1px solid color-mix(in srgb,var(--pc) 40%,transparent);
+  box-shadow:0 0 24px color-mix(in srgb,var(--pc) 35%,transparent),inset 0 0 18px color-mix(in srgb,var(--pc) 18%,transparent);animation:floaty 4s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.portal .route{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;color:var(--pc);text-shadow:0 0 10px color-mix(in srgb,var(--pc) 60%,transparent)}
+.portal h3{font-size:1.45rem;font-weight:800;letter-spacing:-.01em}
+.portal h3 span{color:var(--pc2)}
+.portal p{color:var(--muted);font-size:.88rem;line-height:1.7}
+.portal p b{color:var(--txt)}
+.portal .p-go{margin-top:auto;display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.78rem;letter-spacing:.14em;
+  color:#fff;background:linear-gradient(90deg,var(--pc),var(--pc2));border-radius:12px;padding:14px 22px;
+  box-shadow:0 0 20px color-mix(in srgb,var(--pc) 45%,transparent);transition:.3s}
+.portal:hover .p-go{transform:translateX(6px);box-shadow:0 0 34px color-mix(in srgb,var(--pc) 65%,transparent)}
+/* ============ REVEAL / TOAST / FOOTER ============ */
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:none}
+.alive{animation:alive4d .9s ease}
+@keyframes alive4d{
+  0%{filter:none}
+  22%{filter:brightness(1.35) saturate(1.6) hue-rotate(12deg);box-shadow:0 0 40px rgba(34,211,238,.55),inset 0 0 30px rgba(139,92,246,.3)}
+  55%{filter:brightness(1.15) saturate(1.3) hue-rotate(-10deg);box-shadow:0 0 22px rgba(139,92,246,.45),inset 0 0 16px rgba(34,211,238,.2)}
+  100%{filter:none}}
+#toast{position:fixed;bottom:24px;right:24px;z-index:90;background:var(--card2);border:1px solid rgba(6,182,212,.45);color:var(--txt);
+  border-radius:14px;padding:13px 20px;font-size:.76rem;font-family:'JetBrains Mono',monospace;box-shadow:0 0 26px rgba(6,182,212,.35);
+  opacity:0;transform:translateY(16px);transition:.4s;pointer-events:none;max-width:330px}
+#toast.show{opacity:1;transform:none}
+footer{border-top:1px solid var(--line);margin-top:30px;padding:30px 20px;background:var(--card2)}
+.f-in{max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+.f-in .fl{display:flex;align-items:center;gap:12px;font-weight:800;font-size:.85rem}
+.f-in .fl .bi{font-size:1.4rem;filter:drop-shadow(0 0 10px rgba(34,211,238,.6))}
+.f-in p{color:var(--muted2);font-size:.7rem;font-family:'JetBrains Mono',monospace;letter-spacing:.06em}
+</style>
+</head>
+<body>
+<div class="bgglow g1"></div><div class="bgglow g2"></div><div class="bgglow g3"></div>
+<div class="gridfloor"></div>
+
+<header>
+  <div class="h-in">
+    <div class="logo-badge">🧠</div>
+    <div class="logo-t"><b>DISCOVERY <span>MAX</span></b><small>Neural Education</small></div>
+    <nav class="main">
+      <a href="#paradigma">Paradigma NBF</a>
+      <a href="#elementos">7 Elementos</a>
+      <a href="#ecuaciones">Ecuaciones Brújula</a>
+      <a href="#accesos">Simulador Cognitivo</a>
+      <a href="#neurobiologia">Neurobiología</a>
+    </nav>
+    <canvas id="eeg" width="110" height="28"></canvas>
+    <span class="nbf-live">MÉTODO NBF ACTIVE ONLINE</span>
+    <button class="iconbtn" id="audioBtn" title="Sonidos gravitacionales">🔊</button>
+    <button class="iconbtn" id="themeBtn" title="Fondo oscuro / claro">🌙</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <span class="kick">✨ Fusión APEX KINETIX NEURAL TECH + Método NBF</span>
+    <h1>El fin del <span class="grad">Aprendizaje Genérico</span>. Bienvenidos al Neuro-Performance.</h1>
+    <p>Hackea tu mente y asimila el inglés de forma intuitiva. Combinamos los <b>EYE-TRACKERS Cognitivos de APEX</b> con el disruptivo <b>Método NBF de Vicas-Fedorenko</b> para desmantelar los mitos absurdos y entrenar tu cerebro en milisegundos.</p>
+    <div class="cta-row">
+      <a href="#accesos" class="btn-neon">Entrar al Simulador NBF ▶</a>
+      <a href="#paradigma" class="btn-neon vi">Descubrir la Ciencia</a>
+    </div>
+  </section>
+
+  <!-- ============ PARADIGMA ============ -->
+  <section id="paradigma" class="reveal">
+    <div class="sec-head">
+      <span class="k">// El Postulado Científico Disruptivo</span>
+      <h2>El Postulado Científico Disruptivo</h2>
+      <p>¿Por qué tu cerebro se paraliza al intentar hablar inglés? No es falta de talento, es un glitch de decodificación profunda.</p>
+    </div>
+    <div class="duo">
+      <div class="glass scard" style="--sc:var(--cy2)">
+        <div>
+          <div class="ico">🚫</div>
+          <h3>La Trampa del "Según el Contexto"</h3>
+          <p>La muletilla pedagógica tradicional afirma que todo depende "del contexto". Para la neurociencia, esto es una aberración. Tu cerebro <b>no puede adivinar el contexto y hablar al mismo tiempo</b> en milisegundos; esa sobrecarga cognitiva es lo que causa la parálisis, el bloqueo y la pena.</p>
+        </div>
+        <div class="foot">⚠️ Error: Sobrecarga en Funciones Ejecutivas</div>
+      </div>
+      <div class="glass scard" style="--sc:var(--vio2)">
+        <div>
+          <div class="ico">⚡</div>
+          <h3>"Los Verbos en Inglés No Existen"</h3>
+          <p>El español se basa en conjugaciones complejas de verbos (terminados en <em>-ar, -er, -ir</em>). El inglés no tiene verbos innatos; opera bajo una <b>arquitectura de posicionamiento de ensamble tipo "Lego"</b>. Lo que llamas "verbos" son bases estructurales o sustantivos funcionales activados por determinadores externos. ¡Al posicionar en vez de traducir, liberas la memoria de trabajo!</p>
+        </div>
+        <div class="foot">🧠 Solución: Posicionamiento Matemático de Elementos</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7 ELEMENTOS ============ -->
+  <section id="elementos" class="reveal">
+    <div class="sec-head">
+      <span class="k">// El Nuevo Sistema Operativo</span>
+      <h2>Los 7 Elementos Lingüísticos Clave</h2>
+      <p>Deja de lado la gramática tradicional. Domina los siete bloques matemáticos y arma cualquier idea en inglés de manera intuitiva.</p>
+    </div>
+    <div class="elgrid">
+      <div class="elcard" style="--ec:var(--cy2)"><div class="num">ELEMENTO 01</div><h4>Pronombres Personales Directos</h4><p>Sujetos. Son los activadores lógicos de la estructura.</p></div>
+      <div class="elcard" style="--ec:var(--vio2)"><div class="num">ELEMENTO 02</div><h4>Sustantivos (Nouns)</h4><p>El núcleo del inglés. Objetos, nociones y seres vivos reconvertibles a verbos.</p></div>
+      <div class="elcard" style="--ec:var(--em2)"><div class="num">ELEMENTO 03</div><h4>Preposiciones</h4><p>Relaciones lógicas y espaciales. Indican precisión, estado y superposición.</p></div>
+      <div class="elcard" style="--ec:var(--am2)"><div class="num">ELEMENTO 04</div><h4>Adjetivos</h4><p>Atributos y etiquetas descriptivas aplicables a los sustantivos.</p></div>
+      <div class="elcard" style="--ec:var(--ro2)"><div class="num">ELEMENTO 05</div><h4>Adverbios</h4><p>Modificadores que brindan dinamismo y velocidad a la acción.</p></div>
+      <div class="elcard" style="--ec:var(--ind2)"><div class="num">ELEMENTO 06</div><h4>Palabras Auxiliares</h4><p>Conversores gramaticales. Suplementos lógicos vitalicios.</p></div>
+      <div class="elcard" style="--ec:var(--or2)"><div class="num">ELEMENTO 07</div><h4>Palabras Modales</h4><p>Comodines de posibilidad e intermediarios de tiempo ante la ausencia de verbos naturales.</p></div>
+      <div class="elcard dash"><span class="big">🧩</span><h4>Construcción Modular</h4><p>¡Como un juego de bloques tipo "Lego"!</p></div>
+    </div>
+  </section>
+
+  <!-- ============ ECUACIONES BRÚJULA ============ -->
+  <section id="ecuaciones" class="reveal">
+    <div class="sec-head">
+      <span class="k v">// Mapas Mentales de Orientación</span>
+      <h2>Las Ecuaciones Brújula</h2>
+      <p>Tres leyes cognitivas inviolables para guiar tu mente racional y erradicar bloqueos inmediatos.</p>
+    </div>
+    <div class="eqgrid">
+      <div class="glass eqcard" style="--sc:var(--cy2)">
+        <div class="ico">🔀</div>
+        <span class="tag">Primera Ecuación</span>
+        <h4>ESP = Verbo | ENG = Sustantivo</h4>
+        <p>El español se centra en la acción dinámica. El inglés en la precisión nominal. Transiciona del concepto abstracto a la concreción del nombre.</p>
+      </div>
+      <div class="glass eqcard" style="--sc:var(--vio2)">
+        <div class="ico">🔍</div>
+        <span class="tag">Segunda Ecuación</span>
+        <h4>No Traducir. Definir para Interpretar</h4>
+        <p>La traducción literal es una trampa. El inglés opera por definiciones precisas. Ej. <em>book</em> no significa "libro", define "hojas comprimidas con un lomo".</p>
+      </div>
+      <div class="glass eqcard" style="--sc:var(--em2)">
+        <div class="ico">👓</div>
+        <span class="tag">Tercera Ecuación</span>
+        <h4>Pensamiento Lógico y Crítico</h4>
+        <p>Aplica la lógica a las dos premisas anteriores. Entiende con precisión matemática el mensaje que quieres expresar sin memorizaciones inútiles.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ACCESOS AL SIMULADOR (REEMPLAZA AL ENTRENADOR OCULAR) ============ -->
+  <section id="accesos" class="reveal">
+    <div class="sec-head">
+      <span class="k">// Simulador de Lectura Cognitiva APEX-NBF</span>
+      <h2>Elige tu Cabina de Entrenamiento</h2>
+      <p>Dos puertas neonales hacia el entrenamiento real. Toca un portal: la cabina se enciende, el pulso gravitacional suena y tu cerebro entra en modo neuro-performance.</p>
+    </div>
+    <div class="gates">
+      <a class="portal" style="--pc:var(--cy);--pc2:var(--vio)" id="gate1" href="https://discoveryenglishmexico-commits.github.io/Discovery-VICAS-NEURAL-PRO/">
+        <span class="leds"><span class="led c"></span><span class="led v" style="animation-delay:.3s"></span><span class="led g" style="animation-delay:.6s"></span></span>
+        <div class="p-ico">🧠</div>
+        <span class="route">RUTA 01 // CABINA NEURAL · DISCOVERY-VICAS-NEURAL-PRO</span>
+        <h3>Cabina Neural · <span>Simulador Cognitivo</span></h3>
+        <p>Panel de control neón parpadeante con <b>Lección 13 y Lección 14</b>, caja para cargar tu <b>texto personalizado</b>, velocidades de <b>80 a 600+ PPM</b>, marcadores de color del Sistema Operativo NBF y <b>sonidos gravitacionales 4D</b> al tocar cada panel.</p>
+        <span class="p-go">ABRIR CABINA NEURAL →</span>
+      </a>
+      <a class="portal" style="--pc:var(--ro);--pc2:var(--am)" id="gate2" href="https://discoveryenglishmexico-commits.github.io/SHOCKING-NEURAL-PRO-NEW/shocking-pronouns.html#ppd">
+        <span class="leds"><span class="led m"></span><span class="led a" style="animation-delay:.3s"></span><span class="led c" style="animation-delay:.6s"></span></span>
+        <div class="p-ico">⚡</div>
+        <span class="route">RUTA 02 // SHOCKING PRONOUNS · SECCIÓN PPD</span>
+        <h3>Shocking Pronouns · <span>PPD</span></h3>
+        <p>El teclado interactivo de los <b>Pronombres Personales Directos</b>: pulsa cada tecla, escucha su sonido suave, mira su LED encenderse y descubre <b>persona, número y equivalente en español</b>. El origen de todo el ensamblaje.</p>
+        <span class="p-go">ACTIVAR PPD →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ NEUROBIOLOGÍA ============ -->
+  <section id="neurobiologia" class="reveal">
+    <div class="sec-head">
+      <span class="k r">// El Respaldamiento Científico</span>
+      <h2>La Neurobiología de la Fluidez</h2>
+      <p>¿Qué pasa exactamente dentro del cerebro cuando aprendes con Discovery MAX?</p>
+    </div>
+    <div class="eqgrid">
+      <div class="glass scard" style="--sc:var(--cy2)">
+        <div>
+          <h4 style="font-size:1.15rem;font-weight:800;margin-bottom:10px">La Vía Dorsal del Lenguaje</h4>
+          <p>Es el servomecanismo neural maestro que conecta la percepción del sonido con la activación motora (el habla). Al desglosar estructuras visualmente en guiones o renglones completos, estimulamos la integración rápida sin que pase por el filtro lento de la gramática reflexiva.</p>
+        </div>
+        <div class="footm">BA 44 - BA 45 (ÁREA DE BROCA)</div>
+      </div>
+      <div class="glass scard" style="--sc:var(--vio2)">
+        <div>
+          <h4 style="font-size:1.15rem;font-weight:800;margin-bottom:10px">Estudios fMRI de MIT & EvLab</h4>
+          <p>Estudios con resonancias magnéticas funcionales (liderados por laboratorios como el de Evelina Fedorenko en el MIT) demuestran que el cerebro activa áreas parcialmente diferentes para procesar verbos y sustantivos. NBF explota esta asimetría dándole total control a la corteza nominal.</p>
+        </div>
+        <div class="footm">MAPEO ESTRUCTURAL CORTICAL</div>
+      </div>
+      <div class="glass scard" style="--sc:var(--em2)">
+        <div>
+          <h4 style="font-size:1.15rem;font-weight:800;margin-bottom:10px">HVPT (Ajuste Fonético)</h4>
+          <p>El "High Variability Phonetic Training" bombardea el sistema auditivo con variabilidad de timbres, deconstruyendo la 'Sordera y Parálisis Fonética' que provoca el magneto perceptual del español. La fluidez real no viene de "repetir como loro", sino de recalibrar tu mapa auditivo.</p>
+        </div>
+        <div class="footm">FILTRO ESTADÍSTICO DEL ENTORNO</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="f-in">
+    <div class="fl"><span class="bi">🧠</span> Discovery Max Neuroeducation Networks L.A. LLC</div>
+    <p>&copy; 2026 DISCOVERY MAX · TODOS LOS DERECHOS RESERVADOS · BASADO EN INVESTIGACIONES NEUROCOGNITIVAS</p>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+/* ================= AUDIO GRAVITACIONAL ================= */
+let audioOn=true,actx=null;
+function ac(){if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(actx&&actx.state==='suspended')actx.resume();return actx;}
+function gravSfx(){if(!audioOn)return;const c=ac();if(!c)return;const t=c.currentTime;
+  const o=c.createOscillator(),g=c.createGain(),f=c.createBiquadFilter();
+  o.type='sine';o.frequency.setValueAtTime(72,t);o.frequency.exponentialRampToValueAtTime(26,t+.7);
+  f.type='lowpass';f.frequency.value=220;
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.16,t+.03);g.gain.exponentialRampToValueAtTime(.0001,t+.85);
+  o.connect(f);f.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.9);
+  const o2=c.createOscillator(),g2=c.createGain();
+  o2.type='triangle';o2.frequency.setValueAtTime(144,t);o2.frequency.exponentialRampToValueAtTime(52,t+.5);
+  g2.gain.setValueAtTime(0,t);g2.gain.linearRampToValueAtTime(.05,t+.02);g2.gain.exponentialRampToValueAtTime(.0001,t+.55);
+  o2.connect(g2);g2.connect(c.destination);o2.start(t);o2.stop(t+.6);}
+function blipSfx(f){if(!audioOn)return;const c=ac();if(!c)return;const t=c.currentTime;
+  const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f||720;
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+.22);
+  o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.25);}
+function sweepSfx(){if(!audioOn)return;const c=ac();if(!c)return;const t=c.currentTime;
+  const o=c.createOscillator(),g=c.createGain();o.type='sawtooth';
+  o.frequency.setValueAtTime(110,t);o.frequency.exponentialRampToValueAtTime(420,t+.4);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05,t+.03);g.gain.exponentialRampToValueAtTime(.0001,t+.45);
+  o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.5);}
+document.getElementById('audioBtn').addEventListener('click',function(){
+  audioOn=!audioOn;this.textContent=audioOn?'🔊':'🔇';
+  if(audioOn)gravSfx();showToast(audioOn?'Sonidos gravitacionales activados':'Audio silenciado');});
+/* ================= TEMA OSCURO / CLARO ================= */
+document.getElementById('themeBtn').addEventListener('click',function(){
+  const l=document.documentElement.classList.toggle('light');
+  this.textContent=l?'☀️':'🌙';gravSfx();
+  showToast(l?'Modo claro: contraste máximo':'Modo oscuro neural');});
+/* ================= EFECTO VIVO 4D AL TOCAR PANELES ================= */
+document.addEventListener('pointerdown',e=>{
+  const p=e.target.closest('.glass,.portal,.btn-neon,.iconbtn,.elcard');
+  if(p){p.classList.remove('alive');void p.offsetWidth;p.classList.add('alive');
+    p.classList.contains('portal')?gravSfx():blipSfx(560);}});
+/* ================= PORTALES: SONIDO + NAVEGACIÓN ================= */
+['gate1','gate2'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{
+    e.preventDefault();const url=e.currentTarget.href;
+    gravSfx();sweepSfx();showToast('Abriendo portal neural…');
+    setTimeout(()=>{location.href=url;},430);});});
+/* ================= TOAST ================= */
+let toastT=null;
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3000);}
+/* ================= EEG NEURAL ================= */
+(function(){const cv=document.getElementById('eeg'),cx=cv.getContext('2d');let ph=0;
+ (function draw(){cx.clearRect(0,0,110,28);cx.beginPath();
+  for(let x=0;x<110;x++){const y=14+Math.sin((x+ph)*.14)*5*Math.sin((x+ph)*.021)+Math.sin((x+ph)*.4)*2.2;
+   x?cx.lineTo(x,y):cx.moveTo(x,y);}
+  cx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--cy2').trim()||'#22d3ee';
+  cx.lineWidth=1.3;cx.shadowBlur=6;cx.shadowColor=cx.strokeStyle;cx.stroke();cx.shadowBlur=0;
+  ph+=2;requestAnimationFrame(draw);})();})();
+/* ================= REVEAL ON SCROLL ================= */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+/* ================= SONIDO SUAVE EN NAV ================= */
+document.querySelectorAll('nav.main a, .btn-neon').forEach(a=>a.addEventListener('mouseenter',()=>blipSfx(840)));
+</script>
+</body>
+</html>
